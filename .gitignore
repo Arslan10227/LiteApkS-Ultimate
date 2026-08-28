@@ -1,0 +1,24 @@
+# Keystore and signing secrets
+keystore.properties
+*.jks
+*.keystore
+
+# Gradle / Android
+.gradle/
+build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+
+# IDE
+.idea/
+*.iml
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
