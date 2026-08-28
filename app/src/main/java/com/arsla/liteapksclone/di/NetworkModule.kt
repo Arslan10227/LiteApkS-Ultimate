@@ -21,7 +21,7 @@ object NetworkModule {
     @Singleton
     fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
-        coerceInputValuesToDefaultValues = true
+        coerceInputValues = true
         isLenient = true
         prettyPrint = false
     }

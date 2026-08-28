@@ -135,7 +135,7 @@ class DownloadWorker @AssistedInject constructor(
                     downloadedBytes = downloaded
                 )
             )
-            return Result.failure(
+            return@withContext Result.failure(
                 Data.Builder()
                     .putLong("offset", downloaded)
                     .putString("status", DownloadEntity.STATUS_PAUSED)
