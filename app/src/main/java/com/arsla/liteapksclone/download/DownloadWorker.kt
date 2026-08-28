@@ -12,6 +12,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import com.arsla.liteapksclone.R
 import com.arsla.liteapksclone.data.dao.DownloadDao
 import com.arsla.liteapksclone.data.entity.DownloadEntity
@@ -42,11 +44,11 @@ class DownloadWorker @AssistedInject constructor(
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun doWork(): Result {
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val downloadId = inputData.getLong(KEY_DOWNLOAD_ID, -1)
-        if (downloadId == -1L) return Result.failure()
+        if (downloadId == -1L) return@withContext Result.failure()
 
-        val download = downloadDao.getById(downloadId) ?: return Result.failure()
+        val download = downloadDao.getById(downloadId) ?: return@withContext Result.failure()
         val file = File(applicationContext.cacheDir, "apk_downloaded/${download.fileName}")
         file.parentFile?.mkdirs()
 
@@ -68,13 +70,13 @@ class DownloadWorker @AssistedInject constructor(
         if (!response.isSuccessful) {
             downloadDao.update(download.copy(status = DownloadEntity.STATUS_FAILED))
             TastyToaster.show(applicationContext, "Download failed", TastyToaster.Type.ERROR)
-            return Result.retry()
+            return@withContext Result.retry()
         }
 
         val body = response.body ?: run {
             downloadDao.update(download.copy(status = DownloadEntity.STATUS_FAILED))
             TastyToaster.show(applicationContext, "Download failed", TastyToaster.Type.ERROR)
-            return Result.failure()
+            return@withContext Result.failure()
         }
 
         val total = (body.contentLength() + offset).coerceAtLeast(1)
@@ -119,7 +121,7 @@ class DownloadWorker @AssistedInject constructor(
                     downloadedBytes = downloaded
                 )
             )
-            return Result.retry()
+            return@withContext Result.retry()
         } finally {
             output.close()
             input.close()
@@ -159,7 +161,7 @@ class DownloadWorker @AssistedInject constructor(
             // Installation is user-driven; ignore.
         }
 
-        return Result.success(
+        return@withContext Result.success(
             Data.Builder()
                 .putString("file_path", file.absolutePath)
                 .putString("status", DownloadEntity.STATUS_COMPLETED)

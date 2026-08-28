@@ -8,8 +8,10 @@ import com.arsla.liteapksclone.data.entity.CachedPost
 import com.arsla.liteapksclone.error.ErrorHandler
 import com.arsla.liteapksclone.util.Resource
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.json.Json
 import java.io.File
 import javax.inject.Inject
@@ -36,7 +38,7 @@ class PostRepository @Inject constructor(
             ErrorHandler.handle(e, "PostRepository")
             emit(Resource.Error(e.localizedMessage ?: "Network error", cached))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun getPost(id: Int): Flow<Resource<PostDto>> = flow {
         emit(Resource.Loading())
@@ -51,7 +53,7 @@ class PostRepository @Inject constructor(
             ErrorHandler.handle(e, "PostRepository")
             emit(Resource.Error(e.localizedMessage ?: "Network error", cached))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun clearCache() {
         postDao.clear()

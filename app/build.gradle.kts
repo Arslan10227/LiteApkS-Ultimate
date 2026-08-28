@@ -118,7 +118,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.3.0")
 
     // Toasts
-    implementation("com.sdsmdg.tastytoast:tastytoast:0.1.1")
+    implementation("com.github.yadav-rahul:TastyToast:0.1.1")
 
     // Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")

@@ -2,6 +2,8 @@ package com.arsla.liteapksclone.data.repository
 
 import com.arsla.liteapksclone.api.dto.GitHubReleaseDto
 import com.arsla.liteapksclone.error.ErrorHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,12 +26,12 @@ class UpdateRepository @Inject constructor(
 ) {
     private val url = "https://api.github.com/repos/Arslan10227/LiteApkS-Ultimate/releases/latest"
 
-    suspend fun getLatestUpdate(currentVersion: String): UpdateInfo {
+    suspend fun getLatestUpdate(currentVersion: String): UpdateInfo = withContext(Dispatchers.IO) {
         val request = Request.Builder()
             .url(url)
             .build()
 
-        return try {
+        try {
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
                     throw IOException("GitHub API error: ${response.code}")

@@ -5,8 +5,10 @@ import com.arsla.liteapksclone.api.dto.CategoryDto
 import com.arsla.liteapksclone.data.dao.CategoryDao
 import com.arsla.liteapksclone.data.entity.CachedCategory
 import com.arsla.liteapksclone.util.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +38,7 @@ class CategoryRepository @Inject constructor(
             }
             emit(Resource.Error(e.localizedMessage ?: "Network error", cached))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun clearCache() {
         categoryDao.clear()
