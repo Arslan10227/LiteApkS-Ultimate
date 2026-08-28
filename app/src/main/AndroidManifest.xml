@@ -46,6 +46,7 @@
 
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="com.arsla.liteapksclone.workmanager-init"
             tools:node="remove" />
 
         <service
