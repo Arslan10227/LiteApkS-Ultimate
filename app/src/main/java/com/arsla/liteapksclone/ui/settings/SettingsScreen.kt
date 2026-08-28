@@ -35,7 +35,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import com.arsla.liteapksclone.BuildConfig
 import com.arsla.liteapksclone.R
+import com.arsla.liteapksclone.data.repository.UpdateInfo
+import com.arsla.liteapksclone.ui.components.AnimatedDialog
 import com.arsla.liteapksclone.util.Resource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +52,7 @@ fun SettingsScreen(
     val update by viewModel.update.collectAsState()
     val cleared by viewModel.cleared.collectAsState()
     val context = LocalContext.current
+    var showChangelog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(stringResource(R.string.settings)) })
@@ -100,11 +106,16 @@ fun SettingsScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.Update, contentDescription = null)
                         Text(
-                            text = "Check for store update",
+                            text = "App update",
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
+                    Text(
+                        text = "Current version: ${BuildConfig.VERSION_NAME}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                     Button(
                         onClick = { viewModel.checkForUpdate() },
                         modifier = Modifier.padding(top = 8.dp)
@@ -113,24 +124,24 @@ fun SettingsScreen(
                     }
                     when (val u = update) {
                         is Resource.Success -> {
-                            Text(
-                                text = "Latest: ${u.data.latestVersion}",
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                            if (u.data.forceUpdate) {
+                            if (u.data.isAvailable) {
                                 Text(
-                                    text = "A forced update is available.",
-                                    color = MaterialTheme.colorScheme.error
+                                    text = "Version ${u.data.latestVersion} is available",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(top = 8.dp)
                                 )
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(u.data.downloadUrl))
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.padding(top = 4.dp)
-                            ) {
-                                Text("Download update")
+                                OutlinedButton(
+                                    onClick = { showChangelog = true },
+                                    modifier = Modifier.padding(top = 4.dp)
+                                ) {
+                                    Text("View changelog")
+                                }
+                            } else {
+                                Text(
+                                    text = "You are on the latest version",
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                             }
                         }
                         is Resource.Error -> {
@@ -143,6 +154,24 @@ fun SettingsScreen(
                         else -> {}
                     }
                 }
+            }
+
+            val latestUpdate = update as? Resource.Success<UpdateInfo>
+            if (latestUpdate != null && showChangelog) {
+                AnimatedDialog(
+                    visible = true,
+                    onDismiss = { showChangelog = false },
+                    title = "v${latestUpdate.data.latestVersion} is available",
+                    text = latestUpdate.data.changelog,
+                    confirmText = "Download update",
+                    onConfirm = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(latestUpdate.data.downloadUrl)
+                        )
+                        context.startActivity(intent)
+                    }
+                )
             }
 
             Card(

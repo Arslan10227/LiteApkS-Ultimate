@@ -42,7 +42,8 @@ fun AnimatedDialog(
     onDismiss: () -> Unit,
     title: String,
     text: String,
-    confirmText: String = "OK"
+    confirmText: String = "OK",
+    onConfirm: (() -> Unit)? = null
 ) {
     var showContent by remember { mutableStateOf(false) }
 
@@ -94,7 +95,7 @@ fun AnimatedDialog(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Button(
-                                onClick = onDismiss,
+                                onClick = { onConfirm?.invoke(); onDismiss() },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text(confirmText)
