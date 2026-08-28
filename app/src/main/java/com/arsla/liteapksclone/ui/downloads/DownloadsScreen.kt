@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,7 @@ import com.arsla.liteapksclone.R
 import com.arsla.liteapksclone.data.entity.DownloadEntity
 import com.arsla.liteapksclone.ui.components.DEFAULT_LOTTIE_URL
 import com.arsla.liteapksclone.ui.components.EmptyState
+import com.arsla.liteapksclone.util.TastyToaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +46,7 @@ fun DownloadsScreen(
     viewModel: DownloadsViewModel = hiltViewModel()
 ) {
     val downloads by viewModel.downloads.collectAsState()
+    val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(stringResource(R.string.downloads)) })
@@ -62,10 +65,22 @@ fun DownloadsScreen(
             items(downloads, key = { it.id }) { download ->
                 DownloadItem(
                     download = download,
-                    onPause = { viewModel.pause(download.id) },
-                    onResume = { viewModel.resume(download.id) },
-                    onRetry = { viewModel.retry(download.id) },
-                    onDelete = { viewModel.delete(download.id) }
+                    onPause = {
+                        TastyToaster.show(context, "Download paused", TastyToaster.Type.WARNING)
+                        viewModel.pause(download.id)
+                    },
+                    onResume = {
+                        TastyToaster.show(context, "Download resumed", TastyToaster.Type.INFO)
+                        viewModel.resume(download.id)
+                    },
+                    onRetry = {
+                        TastyToaster.show(context, "Download retrying", TastyToaster.Type.INFO)
+                        viewModel.retry(download.id)
+                    },
+                    onDelete = {
+                        TastyToaster.show(context, "Download deleted", TastyToaster.Type.CONFUSING)
+                        viewModel.delete(download.id)
+                    }
                 )
             }
         }

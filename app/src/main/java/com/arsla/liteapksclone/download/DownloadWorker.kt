@@ -17,6 +17,7 @@ import com.arsla.liteapksclone.data.dao.DownloadDao
 import com.arsla.liteapksclone.data.entity.DownloadEntity
 import com.arsla.liteapksclone.error.ErrorHandler
 import com.arsla.liteapksclone.install.ApkInstaller
+import com.arsla.liteapksclone.util.TastyToaster
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import okhttp3.OkHttpClient
@@ -55,6 +56,7 @@ class DownloadWorker @AssistedInject constructor(
             buildNotification(download.title, 0, 0)
         )
         setForeground(foregroundInfo)
+        TastyToaster.show(applicationContext, "Download started", TastyToaster.Type.INFO)
 
         val offset = file.length()
         val requestBuilder = Request.Builder().url(download.downloadUrl)
@@ -65,11 +67,13 @@ class DownloadWorker @AssistedInject constructor(
         val response = client.newCall(requestBuilder.build()).execute()
         if (!response.isSuccessful) {
             downloadDao.update(download.copy(status = DownloadEntity.STATUS_FAILED))
+            TastyToaster.show(applicationContext, "Download failed", TastyToaster.Type.ERROR)
             return Result.retry()
         }
 
         val body = response.body ?: run {
             downloadDao.update(download.copy(status = DownloadEntity.STATUS_FAILED))
+            TastyToaster.show(applicationContext, "Download failed", TastyToaster.Type.ERROR)
             return Result.failure()
         }
 
@@ -107,6 +111,7 @@ class DownloadWorker @AssistedInject constructor(
             }
             output.flush()
         } catch (e: Exception) {
+            TastyToaster.show(applicationContext, "Download failed", TastyToaster.Type.ERROR)
             ErrorHandler.handle(e, "DownloadWorker")
             downloadDao.update(
                 download.copy(
@@ -121,6 +126,7 @@ class DownloadWorker @AssistedInject constructor(
         }
 
         if (isStopped) {
+            TastyToaster.show(applicationContext, "Download paused", TastyToaster.Type.WARNING)
             downloadDao.update(
                 download.copy(
                     status = DownloadEntity.STATUS_PAUSED,
@@ -141,6 +147,7 @@ class DownloadWorker @AssistedInject constructor(
                 downloadedBytes = downloaded
             )
         )
+        TastyToaster.show(applicationContext, "Download completed", TastyToaster.Type.SUCCESS)
         notificationManager.notify(
             downloadId.toInt(),
             buildNotification(download.title, total, total, complete = true)

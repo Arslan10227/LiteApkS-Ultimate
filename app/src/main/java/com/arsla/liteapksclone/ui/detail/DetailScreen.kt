@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,6 +49,7 @@ import com.arsla.liteapksclone.ui.components.EmptyState
 import com.arsla.liteapksclone.ui.components.HtmlText
 import com.arsla.liteapksclone.ui.components.VersionItem
 import com.arsla.liteapksclone.util.Resource
+import com.arsla.liteapksclone.util.TastyToaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +60,7 @@ fun DetailScreen(
 ) {
     val post by viewModel.post.collectAsState()
     val comments by viewModel.comments.collectAsState()
+    val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -88,6 +91,7 @@ fun DetailScreen(
                     post = p.data,
                     comments = comments,
                     onDownload = { version, link ->
+                        TastyToaster.show(context, "Download started", TastyToaster.Type.INFO)
                         viewModel.download(version, link)
                     }
                 )
