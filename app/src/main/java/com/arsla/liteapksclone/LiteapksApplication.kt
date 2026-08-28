@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.work.Configuration
 import com.arsla.liteapksclone.error.CrashHandler
 import com.arsla.liteapksclone.error.ErrorHandler
+import androidx.hilt.work.HiltWorkerFactory
 import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.HiltWorkerFactory
 import javax.inject.Inject
 
 @HiltAndroidApp
