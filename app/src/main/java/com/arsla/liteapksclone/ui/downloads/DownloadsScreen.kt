@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arsla.liteapksclone.R
 import com.arsla.liteapksclone.data.entity.DownloadEntity
+import com.arsla.liteapksclone.ui.components.DEFAULT_LOTTIE_URL
 import com.arsla.liteapksclone.ui.components.EmptyState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,8 @@ fun DownloadsScreen(
             EmptyState(
                 icon = Icons.Default.Download,
                 title = "No downloads",
-                message = "Download an app from the detail screen to see it here."
+                message = "Download an app from the detail screen to see it here.",
+                lottieUrl = DEFAULT_LOTTIE_URL
             )
             return
         }

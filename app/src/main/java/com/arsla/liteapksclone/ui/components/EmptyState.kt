@@ -18,6 +18,7 @@ fun EmptyState(
     icon: ImageVector,
     title: String,
     message: String? = null,
+    lottieUrl: String? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -27,12 +28,21 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            modifier = Modifier.padding(bottom = 16.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        if (lottieUrl != null) {
+            LottieBox(
+                url = lottieUrl,
+                modifier = Modifier
+                    .size(140.dp)
+                    .padding(bottom = 16.dp)
+            )
+        } else {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier.padding(bottom = 16.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,

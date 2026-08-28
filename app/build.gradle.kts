@@ -114,6 +114,9 @@ dependencies {
     // Images
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    // Animations
+    implementation("com.airbnb.android:lottie-compose:6.3.0")
+
     // Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 

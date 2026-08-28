@@ -48,10 +48,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.arsla.liteapksclone.ui.components.AnimatedDialog
+import com.arsla.liteapksclone.ui.components.DEFAULT_LOTTIE_URL
+import com.arsla.liteapksclone.ui.components.LottieBox
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,11 +102,11 @@ fun AboutScreen(
                         .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(64.dp)
+                    AsyncImage(
+                        model = "https://github.com/Arslan10227.png",
+                        contentDescription = "Arslan10227",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -144,10 +148,9 @@ fun AboutScreen(
                         modifier = Modifier.padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        LottieBox(
+                            url = DEFAULT_LOTTIE_URL,
+                            modifier = Modifier.size(80.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(

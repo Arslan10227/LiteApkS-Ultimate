@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arsla.liteapksclone.R
 import com.arsla.liteapksclone.api.dto.PostDto
+import com.arsla.liteapksclone.ui.components.DEFAULT_LOTTIE_URL
 import com.arsla.liteapksclone.ui.components.EmptyState
 import com.arsla.liteapksclone.ui.components.PostCard
 import com.arsla.liteapksclone.util.Resource
@@ -107,7 +108,8 @@ fun SearchScreen(
                             EmptyState(
                                 icon = Icons.Default.Search,
                                 title = stringResource(R.string.search),
-                                message = "Type to search apps and games"
+                                message = "Type to search apps and games",
+                                lottieUrl = DEFAULT_LOTTIE_URL
                             )
                         }
                     }
@@ -133,7 +135,8 @@ fun SearchScreen(
                             EmptyState(
                                 icon = Icons.Default.Search,
                                 title = stringResource(R.string.no_results),
-                                message = "Try a different keyword"
+                                message = "Try a different keyword",
+                                lottieUrl = DEFAULT_LOTTIE_URL
                             )
                         }
                     } else {
