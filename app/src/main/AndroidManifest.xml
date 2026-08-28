@@ -44,10 +44,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="com.arsla.liteapksclone.workmanager-init"
-            tools:node="remove" />
 
         <service
             android:name=".messaging.LiteapksMessagingService"
