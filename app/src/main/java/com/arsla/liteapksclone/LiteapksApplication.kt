@@ -20,8 +20,8 @@ class LiteapksApplication : Application(), Configuration.Provider {
         CrashHandler.initialize()
     }
 
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 }

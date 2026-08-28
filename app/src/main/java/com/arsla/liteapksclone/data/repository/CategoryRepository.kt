@@ -32,6 +32,8 @@ class CategoryRepository @Inject constructor(
                     termId = it.id,
                     name = it.name,
                     slug = it.slug,
+                    termTaxonomyId = it.id,
+                    taxonomy = "category",
                     parent = it.parent,
                     count = it.count
                 )
