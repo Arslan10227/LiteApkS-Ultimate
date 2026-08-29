@@ -18,8 +18,8 @@ class WebViewCookieJar : CookieJar {
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
         val cookieString = cookieManager.getCookie(url.toString()) ?: return emptyList()
-        val host = url.host()
-        val path = url.encodedPath().ifEmpty { "/" }
+        val host = url.host
+        val path = url.encodedPath.ifEmpty { "/" }
 
         return cookieString.split(";").mapNotNull { part ->
             val trimmed = part.trim()
