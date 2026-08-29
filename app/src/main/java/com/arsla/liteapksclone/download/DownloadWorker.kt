@@ -61,7 +61,7 @@ class DownloadWorker @AssistedInject constructor(
         TastyToaster.show(applicationContext, "Download started", TastyToaster.Type.INFO)
 
         val offset = file.length()
-        val requestBuilder = Request.Builder().url(download.downloadUrl)
+        val requestBuilder = Request.Builder().url(download.downloadUrl.replace(" ", "%20"))
         if (offset > 0) {
             requestBuilder.header("Range", "bytes=$offset-")
         }
